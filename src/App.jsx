@@ -116,26 +116,34 @@ function App() {
         </button>
       </div>
       
+      {/* Issue 13: Tidak ada handling untuk empty state */}
       <div className="todo-list">
-        {/* Issue 13: Tidak ada handling untuk empty state */}
-        {getFilteredTodos().map((todo) => (
-          // Issue 14: Key menggunakan index bisa lebih baik dengan ID
-          <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            <input 
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            />
-            {/* Issue 15: Potential XSS jika text dari user input | done (replace deangerouslySetInnerHTML with safe text rendering) */}
-            <span>{todo.text}</span>
-            <button 
-              className="delete-btn"
-              onClick={() => deleteTodo(todo.id)}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
+       {/* Issue 14: Key menggunakan index bisa lebih baik dengan ID */}
+        {filteredTodos.length === 0 ? (
+          <p className="empty-state">
+            {filter === 'all'
+              ? 'No todos yet. Add one!'
+              : `No ${filter} todos.`}
+          </p>
+        ) : (
+          filteredTodos.map((todo) => (
+            <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo.id)}
+              />
+              {/* Issue 15: Potential XSS jika text dari user input | done (replace deangerouslySetInnerHTML with safe text rendering) */}
+              <span>{todo.text}</span>
+              <button 
+                className="delete-btn"
+                onClick={() => deleteTodo(todo.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
       </div>
       
       <div className="stats">
