@@ -79,6 +79,7 @@ function App() {
       
       {/* Issue 11: Tidak ada label untuk accessibility */}
       <div className="input-section">
+        <label htmlFor="todo-input">Add Todo</label>
         <input 
           type="text"
           value={input}
