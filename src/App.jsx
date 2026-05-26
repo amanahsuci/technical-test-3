@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-// Issue 1: Inline API key (security issue) | done
+// Issue 1: Inline API key (security issue) | done (move API key to env to prevent secret exposure)
 const API_KEY = import.meta.env.VITE_API_KEY
 
 function App() {
@@ -9,12 +9,17 @@ function App() {
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('all')
   
-  // Issue 3: useEffect tanpa dependency array yang tepat
+  // Issue 3: useEffect tanpa dependency array yang tepat | done (wrap JSON in try'n'catch to handle corrupted localStorage)
   useEffect(() => {
     // Load from localStorage
-    const saved = localStorage.getItem('todos')
-    if (saved) {
-      setTodos(JSON.parse(saved))
+    try {
+      const saved = localStorage.getItem('todos')
+      if (saved) {
+        setTodos(JSON.parse(saved)) 
+      }
+    } catch (error) {
+      console.error('Failed to load todos from localStorage:', error)
+      localStorage.removeItem('todos')
     }
   }, [])
   
@@ -124,7 +129,7 @@ function App() {
               checked={todo.completed}
               onChange={() => toggleTodo(todo.id)}
             />
-            {/* Issue 15: Potential XSS jika text dari user input | done */}
+            {/* Issue 15: Potential XSS jika text dari user input | done (replace deangerouslySetInnerHTML with safe text rendering) */}
             <span>{todo.text}</span>
             <button 
               className="delete-btn"
