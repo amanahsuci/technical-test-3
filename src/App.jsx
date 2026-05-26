@@ -49,7 +49,7 @@ function App() {
     setInput('')
   }, [input, todos])
   
-  // Issue 7: Tidak ada error handling
+  // Issue 7: Tidak ada error handling | done (add error handling)
   const deleteTodo = useCallback((id) => {
     if (!id) {
       console.error('deleteTodos: id is required')
@@ -69,7 +69,7 @@ function App() {
       return
     }
     const todoExists = todos.some(todo => todo.id === id)
-    if (!todoExist) {
+    if (!todoExists) {
       console.error(`toggleTodo: todo with "${id}" not found`)
       return
     }
@@ -92,7 +92,19 @@ function App() {
     active: todos.filter(t => !t.completed).length
   }), [todos])
   
-  // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
+  // Issue 10: Inline event handler dengan arrow function (re-create setiap render) | done (extract inline arrow functions to useCallback)
+  const handleInputChange = useCallback((e) => {
+    setInput(e.target.value)
+  }, [])
+
+  const handleKeyPress = useCallback((e) => {
+    if (e.key === 'Enter') addTodo()
+  }, [addTodo])
+
+  const handleFilterAll = useCallback(() => setFilter('all'), [])
+  const handleFilterActive = useCallback(() => setFilter('active'), [])
+  const handleFilterCompleted = useCallback(() => setFilter('completed'), [])
+
   return (
     <div className="app">
       <h1>My Todo List</h1>
@@ -103,13 +115,10 @@ function App() {
         <input 
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              addTodo()
-            }
-          }}
+          onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="What needs to be done?"
+          aria-label="Add a new Todo"
         />
         <button onClick={addTodo}>Add</button>
       </div>
