@@ -1,4 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { 
+  useState, 
+  useEffect, 
+  useMemo,
+  useCallback
+} from 'react'
 
 // Issue 1: Inline API key (security issue) | done (move API key to env to prevent secret exposure)
 const API_KEY = import.meta.env.VITE_API_KEY
@@ -29,23 +34,20 @@ function App() {
   }, [todos])
   
   // Issue 5: Function yang tidak di-memoize, re-create setiap render
-  const addTodo = () => {
+  const addTodo = useCallback(() => {
     if (input.trim() === '') {
       alert('Please enter a todo')
       return
     }
-    
-    // Issue 6: Menggunakan Date.now() sebagai ID (bisa collision) | done (replace Date.now() to prevent ID collision)
     const newTodo = {
       id: crypto.randomUUID(),
       text: input,
       completed: false,
       createdAt: new Date().toISOString()
     }
-    
     setTodos([...todos, newTodo])
     setInput('')
-  }
+  }, [input, todos])
   
   // Issue 7: Tidak ada error handling
   const deleteTodo = (id) => {
@@ -77,7 +79,7 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
       
-      {/* Issue 11: Tidak ada label untuk accessibility */}
+      {/* Issue 11: Tidak ada label untuk accessibility | done (add labelForHtml) */}
       <div className="input-section">
         <label htmlFor="todo-input">Add Todo</label>
         <input 
