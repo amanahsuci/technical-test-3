@@ -140,9 +140,7 @@ function App() {
         <p>Total: {stats.total} | Active: {stats.active} | Completed: {stats.completed}</p>
       </div>
       
-      {/* Issue 16: Debug code yang tertinggal */}
-      {console.log('Rendering with todos:', todos)}
-      {console.log('API Key:', API_KEY)}
+      {/* Issue 16: Debug code yang tertinggal | done (deleted because jsx execute in every render and leak API key )*/}
     </div>
   )
 }
