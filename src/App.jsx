@@ -59,7 +59,7 @@ function App() {
   }
   
   // Issue 8: Logic filtering yang bisa dipindah ke useMemo | done (memoize filteredTodos)
-  const getFilteredTodos = useMemo(() => {
+  const filteredTodos = useMemo(() => {
     if (filter === 'active') return todos.filter(todo => !todo.completed)
     if (filter === 'completed') return todos.filter(todo => todo.completed)
     return todos
@@ -116,9 +116,9 @@ function App() {
         </button>
       </div>
       
-      {/* Issue 13: Tidak ada handling untuk empty state */}
+      {/* Issue 13: Tidak ada handling untuk empty state | done (add empty state)*/}
       <div className="todo-list">
-       {/* Issue 14: Key menggunakan index bisa lebih baik dengan ID */}
+       {/* Issue 14: Key menggunakan index bisa lebih baik dengan ID | done  */}
         {filteredTodos.length === 0 ? (
           <p className="empty-state">
             {filter === 'all'
