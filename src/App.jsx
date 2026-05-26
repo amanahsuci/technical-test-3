@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 // Issue 1: Inline API key (security issue) | done (move API key to env to prevent secret exposure)
 const API_KEY = import.meta.env.VITE_API_KEY
@@ -58,23 +58,19 @@ function App() {
     ))
   }
   
-  // Issue 8: Logic filtering yang bisa dipindah ke useMemo
-  const getFilteredTodos = () => {
-    if (filter === 'active') {
-      return todos.filter(todo => !todo.completed)
-    }
-    if (filter === 'completed') {
-      return todos.filter(todo => todo.completed)
-    }
+  // Issue 8: Logic filtering yang bisa dipindah ke useMemo | done (memoize filteredTodos)
+  const getFilteredTodos = useMemo(() => {
+    if (filter === 'active') return todos.filter(todo => !todo.completed)
+    if (filter === 'completed') return todos.filter(todo => todo.completed)
     return todos
-  }
+  }, [todos, filter])
   
-  // Issue 9: Calculation yang tidak perlu di setiap render
-  const stats = {
+  // Issue 9: Calculation yang tidak perlu di setiap render | done (memoize stats)
+  const stats = useMemo(() => ({
     total: todos.length,
     completed: todos.filter(t => t.completed).length,
     active: todos.filter(t => !t.completed).length
-  }
+  }), [todos])
   
   // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
