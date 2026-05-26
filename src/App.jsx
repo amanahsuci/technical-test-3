@@ -50,15 +50,33 @@ function App() {
   }, [input, todos])
   
   // Issue 7: Tidak ada error handling
-  const deleteTodo = (id) => {
+  const deleteTodo = useCallback((id) => {
+    if (!id) {
+      console.error('deleteTodos: id is required')
+      return
+    }
+    const todoExists = todos.some(todo => todo.id === id)
+    if (!todoExists) {
+      console.error(`deleteTodo: todo with id "${id}" not found`)
+      return
+    }
     setTodos(todos.filter(todo => todo.id !== id))
-  }
+  }, [todos])
   
-  const toggleTodo = (id) => {
-    setTodos(todos.map(todo => 
+  const toggleTodo = useCallback((id) => {
+    if (!id) {
+      console.error('toggleTodo: id is required')
+      return
+    }
+    const todoExists = todos.some(todo => todo.id === id)
+    if (!todoExist) {
+      console.error(`toggleTodo: todo with "${id}" not found`)
+      return
+    }
+    setTodos(todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
-  }
+  }, [todos])
   
   // Issue 8: Logic filtering yang bisa dipindah ke useMemo | done (memoize filteredTodos)
   const filteredTodos = useMemo(() => {
